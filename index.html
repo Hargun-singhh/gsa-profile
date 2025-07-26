@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hargun Singh - Google Student Ambassador Candidate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 60vh;
+            max-height: 400px;
+            width: 100%;
+            max-width: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                max-height: 500px;
+                max-width: 500px;
+            }
+        }
+        .nav-active {
+            color: #2563eb;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <!-- 
+        Chosen Palette: Calm Harmony
+        - Background: bg-slate-50
+        - Main Text: text-slate-800
+        - Secondary Text: text-slate-600
+        - Accent: bg-blue-600 / text-blue-600
+        - Containers: bg-white with border-slate-200
+    -->
+    <!-- 
+        Application Structure Plan: 
+        The SPA is designed as an interactive, single-page portfolio, moving beyond the linear format of the source code.
+        1.  Header & Nav: A sticky header with navigation allows users to jump to key sections (Profile, Skills, Experience, Community), facilitating non-linear exploration. This is superior to simple scrolling for a reviewer who may want to see specific information quickly.
+        2.  Profile Section: The initial view introduces the candidate with their mission statement and passions, presented as tags for quick scanning.
+        3.  Skills Section: A Radar Chart visualizes the candidate's diverse skill set, offering a more dynamic and holistic view than a simple list.
+        4.  Experience Section: An interactive tabbed component separates 'Event Leadership' from 'Knowledge Sharing', allowing the user to focus on one capability at a time. Data is extracted from the source and presented as metrics and lists, not code.
+        5.  Community Section: A vertical timeline/stepper visualizes community efforts, telling a story of sustained contribution.
+        This structure turns a static code profile into an engaging user journey, designed for clarity and impact.
+    -->
+    <!-- 
+        Visualization & Content Choices:
+        -   Candidate Passions -> Tag Cloud (HTML/Tailwind): Goal: Inform. Justification: More scannable and visually appealing than a list.
+        -   Core Skills -> Radar Chart (Chart.js/Canvas): Goal: Compare/Inform. Justification: Provides a "wow" factor and a holistic view of the candidate's balanced skill set, which is more impactful than a simple list for a role like GSA.
+        -   launchEvent() method -> Stat Cards & Styled Lists (HTML/Tailwind): Goal: Inform. Justification: Extracts key metrics (100 attendees) and processes into easily digestible formats, focusing on results rather than code implementation.
+        -   buildAndSupportCommunity() method -> Vertical Timeline (HTML/Tailwind): Goal: Organize/Show Change. Justification: Transforms a list of actions into a narrative of continuous community involvement, which is more compelling.
+        -   Navigation -> Interactive Tabs & Scroll-Spy Navbar (JS/HTML): Goal: Organize. Justification: Improves UX by allowing targeted exploration and providing clear feedback on the user's location within the document.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#profile" class="text-lg font-bold text-slate-900">Hargun Singh</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#profile" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-blue-600">Profile</a>
+                        <a href="#skills" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-blue-600">Skills</a>
+                        <a href="#experience" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-blue-600">Experience</a>
+                        <a href="#community" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-blue-600">Community</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        
+        <!-- Profile Section -->
+        <section id="profile" class="text-center min-h-[60vh] flex flex-col justify-center items-center pt-16 pb-12">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">Google Student Ambassador Candidate</h1>
+            <p class="mt-6 text-lg md:text-xl max-w-3xl text-slate-600">
+                Mission: To leverage Google's technologies and my passion for teaching to empower every student on campus.
+            </p>
+            <div class="mt-8">
+                <a href="https://www.linkedin.com/in/hargun-singh42/" target="_blank" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                    View LinkedIn Profile
+                </a>
+            </div>
+             <div class="mt-12 w-full max-w-4xl">
+                <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Core Passions</h3>
+                <div id="passions-container" class="mt-4 flex flex-wrap justify-center gap-2 md:gap-3">
+                    <!-- Passions will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-16 md:py-24 bg-white rounded-2xl shadow-sm">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900">Core Competencies</h2>
+                <p class="mt-4 text-lg text-slate-600">A balanced skill set focused on modern development, cloud infrastructure, and community leadership.</p>
+                <div class="mt-12">
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-16 md:py-24">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Leadership & Capabilities</h2>
+                    <p class="mt-4 text-lg text-slate-600">Demonstrated experience in organizing impactful events and sharing knowledge effectively.</p>
+                </div>
+
+                <div class="mt-12">
+                    <div class="border-b border-slate-200">
+                        <nav class="-mb-px flex justify-center space-x-4 md:space-x-8" aria-label="Tabs">
+                            <button id="tab-leadership" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-blue-600 border-blue-600">
+                                Event Leadership
+                            </button>
+                            <button id="tab-knowledge" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm text-slate-500 border-transparent hover:text-slate-700 hover:border-slate-300">
+                                Knowledge Sharing
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div id="content-leadership" class="tab-content mt-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                                <h3 class="text-lg font-semibold text-slate-900">Event Execution Framework</h3>
+                                <p class="mt-2 text-slate-600">A proven process for launching successful tech events, as demonstrated in my role as Android Team Head at GDG Chitkara.</p>
+                                <div id="event-details" class="mt-6 space-y-4">
+                                    <!-- Event details will be injected by JS -->
+                                </div>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                                <h3 class="text-lg font-semibold text-slate-900">Impact Metrics</h3>
+                                <p class="mt-2 text-slate-600">Key results from a recent event on "Intro to Flutter".</p>
+                                <div class="mt-6 space-y-4">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                            <span class="text-xl">👥</span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="text-3xl font-bold text-slate-900">100+</p>
+                                            <p class="text-sm text-slate-500">Attendees</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                            <span class="text-xl">📈</span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="text-3xl font-bold text-slate-900">Very High</p>
+                                            <p class="text-sm text-slate-500">Engagement</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                                            <span class="text-xl">💬</span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="text-base font-medium text-slate-900">"Inspiring and practical!"</p>
+                                            <p class="text-sm text-slate-500">Student Feedback</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="content-knowledge" class="tab-content mt-8 hidden">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                           <!-- Knowledge sharing cards will be injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section id="community" class="py-16 md:py-24">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900">Community Impact</h2>
+                    <p class="mt-4 text-lg text-slate-600">My goal is to make tech feel accessible, fun, and future-ready for everyone. Here’s how I contribute.</p>
+                </div>
+                <div class="mt-12">
+                    <div id="community-efforts" class="relative">
+                        <!-- Vertical line -->
+                        <div class="absolute left-4 md:left-1/2 top-0 h-full w-0.5 bg-slate-200"></div>
+                        <!-- Community efforts will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-slate-500">
+            <p class="text-sm">Hargun Singh | Chitkara University, Ludhiana</p>
+            <p class="mt-2 text-sm">Status: Ready to initialize and serve the community.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const profileData = {
+                passions: [
+                    "Google Cloud Platform", 
+                    "Android & iOS App Development with Flutter", 
+                    "Docker & DevOps",
+                    "Community Building",
+                    "Tech Education via Projects"
+                ],
+                skills: {
+                    labels: ['App Development', 'Cloud & DevOps', 'Community', 'Tech Education', 'Project Leadership'],
+                    data: [5, 4, 5, 4, 4] 
+                },
+                eventDetails: {
+                    agenda: [
+                        "Welcome & Introduction",
+                        "Deep dive into Topic",
+                        "Live Demo / Codelab Session",
+                        "Q&A and Networking",
+                        "Feedback Collection & Wrap-up"
+                    ],
+                    promotionChannels: [
+                        "GDG Chitkara Instagram", "College Tech Boards", "WhatsApp Tech Groups", "Peer-to-peer buzz", "Email Invites"
+                    ],
+                    collaborators: [
+                        "GDG Chitkara Core Team", "Fellow Android Devs", "Flutter Enthusiasts", "Faculty Mentors"
+                    ]
+                },
+                knowledgeSharing: [
+                    {
+                        icon: '📄',
+                        title: 'Blog Posts',
+                        description: "A 5-minute read on a complex topic, simplified for beginners."
+                    },
+                    {
+                        icon: '💻',
+                        title: 'Live Demos',
+                        description: "An interactive demo script for a hands-on campus workshop."
+                    },
+                    {
+                        icon: '📱',
+                        title: 'Social Media Threads',
+                        description: "A quick-facts thread for platforms like Instagram or Twitter."
+                    }
+                ],
+                communityEfforts: [
+                    "Mentoring juniors on Flutter & Firebase projects",
+                    "Hosting weekly doubt-clearing sessions",
+                    "Organizing peer-learning circles",
+                    "Collaborating with GDSC & GDG teams",
+                    "Highlighting student achievements on social platforms"
+                ]
+            };
+
+            const passionsContainer = document.getElementById('passions-container');
+            profileData.passions.forEach(passion => {
+                const tag = document.createElement('span');
+                tag.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800';
+                tag.textContent = passion;
+                passionsContainer.appendChild(tag);
+            });
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: profileData.skills.labels,
+                    datasets: [{
+                        label: 'Proficiency & Passion',
+                        data: profileData.skills.data,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: { font: { size: 12 }, color: '#475569' },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                stepSize: 1,
+                                display: false
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            const eventDetailsContainer = document.getElementById('event-details');
+            const createDetailList = (title, items) => {
+                let listHtml = `<h4 class="font-semibold text-slate-700">${title}</h4><ul class="mt-2 text-sm text-slate-500 list-disc list-inside">`;
+                items.forEach(item => {
+                    listHtml += `<li>${item}</li>`;
+                });
+                listHtml += `</ul>`;
+                return listHtml;
+            };
+            eventDetailsContainer.innerHTML = `
+                ${createDetailList('📅 Agenda', profileData.eventDetails.agenda)}
+                <div class="pt-4 mt-4 border-t border-slate-200">
+                    ${createDetailList('📢 Promotion Channels', profileData.eventDetails.promotionChannels)}
+                </div>
+                <div class="pt-4 mt-4 border-t border-slate-200">
+                    ${createDetailList('🤝 Collaborators', profileData.eventDetails.collaborators)}
+                </div>
+            `;
+
+            const knowledgeContainer = document.querySelector('#content-knowledge .grid');
+            profileData.knowledgeSharing.forEach(item => {
+                const card = `
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center flex flex-col items-center">
+                        <div class="flex-shrink-0 h-12 w-12 flex items-center justify-center rounded-full bg-slate-100 text-2xl">${item.icon}</div>
+                        <h4 class="mt-4 text-lg font-semibold text-slate-900">${item.title}</h4>
+                        <p class="mt-1 text-slate-600">${item.description}</p>
+                    </div>
+                `;
+                knowledgeContainer.innerHTML += card;
+            });
+
+            const communityContainer = document.getElementById('community-efforts');
+            profileData.communityEfforts.forEach((effort, index) => {
+                const isLeft = index % 2 === 0;
+                const itemHtml = `
+                    <div class="relative mb-8 flex items-center ${isLeft ? 'justify-start' : 'justify-end'} md:justify-center">
+                        <div class="md:w-1/2 ${isLeft ? 'md:pr-8' : 'md:pl-8'} ${isLeft ? 'md:text-right' : 'md:text-left'} w-full pl-10 md:pl-0">
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                <p class="font-medium text-slate-800">${effort}</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 md:left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                            <div class="h-4 w-4 rounded-full bg-blue-600 border-2 border-white"></div>
+                        </div>
+                    </div>
+                `;
+                communityContainer.innerHTML += itemHtml;
+            });
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('text-blue-600', 'border-blue-600');
+                        t.classList.add('text-slate-500', 'border-transparent', 'hover:text-slate-700', 'hover:border-slate-300');
+                    });
+                    tab.classList.add('text-blue-600', 'border-blue-600');
+                    tab.classList.remove('text-slate-500', 'border-transparent', 'hover:text-slate-700', 'hover:border-slate-300');
+                    
+                    const targetId = tab.id.replace('tab-', 'content-');
+                    contents.forEach(content => {
+                        if(content.id === targetId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('nav-active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('nav-active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: "-30% 0px -70% 0px" });
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
